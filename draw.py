@@ -243,7 +243,7 @@ train_op=optimizer.apply_gradients(grads)
 
 ## RUN TRAINING ## 
 #Names placeholder for file saving
-name_data_batches = 'data_batches2/batch_'
+name_data_batches = 'data_batches/batch_'
 name_save = "model/drawmodelfinal_"
 name_loss = "draw_loss_"
 name_drawing = "draw_data_all_"
@@ -324,7 +324,7 @@ print("Outputs saved in file: %s" % out_file)
 
 #Computing the validation loss over the epoch by loading the attention data each time
 #Taking the same validation data for each iteration shouldn't change the loss since the training set and validation set are separate
-#Alternatively, load all the batch 7, then shuffle to get a new batch_size at each iteration
+#Alternatively, load all the validation set, then shuffle to get a new batch_size at each iteration
 
 validation_data = np.load(name_data_batches + str(num_minibatches) + '.npy')[:batch_size]
 feed_dict = {x:validation_data}
