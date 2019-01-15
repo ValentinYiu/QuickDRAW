@@ -55,7 +55,7 @@ z_size=20 # QSampler output size
 batch_size=100 # training minibatch size, must be a square for output
 learning_rate=1e-4 # learning rate for optimizern originally 1e-3
 eps=1e-8 # epsilon for numerical stability
-epoch = 30
+epoch = 80
 
 #Write/read sizes
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
@@ -244,9 +244,9 @@ train_op=optimizer.apply_gradients(grads)
 ## RUN TRAINING ## 
 #Names placeholder for file saving
 name_data_batches = 'data_batches/batch_'
-name_save = "model/drawmodelfinal_"
-name_loss = "draw_loss_"
-name_drawing = "draw_data_all_"
+name_save = "model/drawmodelfinal2_"
+name_loss = "draw_lossfinal2_"
+name_drawing = "draw_data_allfinal2_"
 
 #Initial loading for shape
 train_data = np.load(name_data_batches + '0.npy')
@@ -261,8 +261,8 @@ sess=tf.InteractiveSession()
 
 saver = tf.train.Saver(max_to_keep=5000) # saves variables learned during training, keep number of 
 tf.global_variables_initializer().run()
-#last_save = None
-#saver.restore(sess, last_save) # to restore from model, uncomment
+last_save = 'model/drawmodelfinal_29_6.ckpt'
+saver.restore(sess, last_save) # to restore from model, uncomment
 
 #Timing
 start_time = time.time()
@@ -277,9 +277,11 @@ Lzs_mean = [0]*epoch*num_minibatches
 ###Starting training
 print('Training start')
 for e in range(epoch):
-        for k in range(num_minibatches):
+        minibatch_order = np.random.permutation(num_minibatches)
+        for k in minibatch_order:
                 train_data = np.load(name_data_batches + str(k) + '.npy')
                 xtrains = shuffle_data(train_data)
+                #Shuffle all the minibatch before training on all the inputs
                 for i in range(train_iters):
                         xtrain = xtrains[i*batch_size:(i+1)*batch_size]
                         feed_dict={x:xtrain}
