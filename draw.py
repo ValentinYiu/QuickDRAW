@@ -244,9 +244,9 @@ train_op=optimizer.apply_gradients(grads)
 ## RUN TRAINING ## 
 #Names placeholder for file saving
 name_data_batches = 'data_batches/batch_'
-name_save = "model/drawmodelfinal2_"
-name_loss = "draw_lossfinal2_"
-name_drawing = "draw_data_allfinal2_"
+name_save = "model/drawmodelfinal4_"
+name_loss = "draw_lossfinal4_"
+name_drawing = "draw_data_allfinal4_"
 
 #Initial loading for shape
 train_data = np.load(name_data_batches + '0.npy')
@@ -261,7 +261,7 @@ sess=tf.InteractiveSession()
 
 saver = tf.train.Saver(max_to_keep=5000) # saves variables learned during training, keep number of 
 tf.global_variables_initializer().run()
-last_save = 'model/drawmodelfinal_29_6.ckpt'
+last_save = 'model/drawmodelfinal3_79_5.ckpt'
 saver.restore(sess, last_save) # to restore from model, uncomment
 
 #Timing
