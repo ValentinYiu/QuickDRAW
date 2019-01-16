@@ -55,7 +55,7 @@ z_size=20 # QSampler output size
 batch_size=100 # training minibatch size, must be a square for output
 learning_rate=1e-4 # learning rate for optimizern originally 1e-3
 eps=1e-8 # epsilon for numerical stability
-epoch = 80
+epoch = 50
 
 #Write/read sizes
 read_size = 2*read_n*read_n if FLAGS.read_attn else 2*img_size
@@ -244,9 +244,9 @@ train_op=optimizer.apply_gradients(grads)
 ## RUN TRAINING ## 
 #Names placeholder for file saving
 name_data_batches = 'data_batches/batch_'
-name_save = "model/drawmodelfinal4_"
-name_loss = "draw_lossfinal4_"
-name_drawing = "draw_data_allfinal4_"
+name_save = "model/drawmodelfinal5_"
+name_loss = "draw_lossfinal5_"
+name_drawing = "draw_data_allfinal5_"
 
 #Initial loading for shape
 train_data = np.load(name_data_batches + '0.npy')
@@ -261,7 +261,7 @@ sess=tf.InteractiveSession()
 
 saver = tf.train.Saver(max_to_keep=5000) # saves variables learned during training, keep number of 
 tf.global_variables_initializer().run()
-last_save = 'model/drawmodelfinal3_79_5.ckpt'
+last_save = 'model/drawmodelfinal4_9_1.ckpt'
 saver.restore(sess, last_save) # to restore from model, uncomment
 
 #Timing
@@ -319,7 +319,7 @@ feed_dict = {x:xvalidations}
 print('Starting drawing')
 canvases,L_x,L_z=sess.run([cs,Lx,Lz],feed_dict)
 canvases=np.array(canvases) # T x batch x img_size
-out_file=os.path.join(FLAGS.data_dir,name_drawing + str(num_minibatches) + ".npz")
+out_file=os.path.join(FLAGS.data_dir,name_drawing + ".npz")
 
 np.savez(out_file,canvases = canvases, loss = [[L_x],[L_z]])
 print("Outputs saved in file: %s" % out_file)

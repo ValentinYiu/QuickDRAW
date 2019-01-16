@@ -1,5 +1,5 @@
 # takes data saved by DRAW model and generates animations
-# example usage: python plot_data.py noattn /tmp/draw/draw_data.npy
+# Example Usage: python plot_data.py testing_final draw_data.npz
 
 import matplotlib
 import sys
@@ -11,7 +11,7 @@ if not interactive:
 	matplotlib.use('Agg') # Force matplotlib to not use any Xwindows backend.
 import matplotlib.pyplot as plt
 
-
+mask = np.vectorize(lambda x: x*0.25 if x<0.98 else 1.)
 def xrecons_grid(X,B,A):
 	"""
 	plots canvas for single time step
@@ -34,14 +34,26 @@ def xrecons_grid(X,B,A):
 			startc=j*pw+padsize
 			endc=startc+A
 			img[startr:endr,startc:endc]=X[i,j,:,:]
+			img[startr:endr,startc:endc] = mask(img[startr:endr,startc:endc])
+			if i+j ==0:
+				print(img[startr:endr,startc:endc])
 	return img
+	
 
 if __name__ == '__main__':
 	prefix=sys.argv[1]
 	out_file=sys.argv[2]
-	[C,Lxs,Lzs]=np.load(out_file)
+	out = np.load(out_file)
+	C = out['canvases']
+	[Lxs,Lzs] = out['loss']
+	print(Lxs)
+	print(Lzs)
 	T,batch_size,img_size=C.shape
 	X=1.0/(1.0+np.exp(-C)) # x_recons=sigmoid(canvas)
+	X = 1.0-X
+
+
+
 	B=A=int(np.sqrt(img_size))
 	if interactive:
 		f,arr=plt.subplots(1,T)
